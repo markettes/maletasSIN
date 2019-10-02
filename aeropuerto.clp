@@ -18,8 +18,27 @@
 )
 
 ;Hechos dinamicos
-(deffacts hechosDinamicos ; maquina localizacion cargada ;maletas maleta localizacion ;vagones vagon cogido cargado posicion
-  (maquina_transportadora p6 true maletas m1 F m2 F m3 p1 m4 p6 vagones vagont1 true false p6 vagont2 false false p2)
+(deffacts hechosDinamicos ; maquina localizacion cargada ;maletas maleta localizacion ;vagones vagon cogido posicion maletasCogidas
+  (maquina_transportadora p6 false maletas m1 F m2 F m3 p1 m4 p6 vagones vagont1 true p6 vagont2 false p2 maletasCogidas)
 )
 
 ;Reglas
+(defrule coger_maleta
+  (maquina_transportadora ?sitiomaq ?cargada $?x ?maleta ?sitiomal $?y vagones $?z ?vagon true ?sitiovag $?r)
+  (test (= sitiomaq sitiomal))
+  (?maleta ?peso $?c)
+  (?vagon ?pesoMin ?pesoMax)
+  (test (< ?peso ?pesoMax))
+  (test (> ?peso ?pesoMin))
+  =>
+  (printout t " Maleta ha sido cargada ")
+  (assert (maquina_transportadora ?sitiomaq true $?x $?y vagones $?z ?vagon true ?sitiovag $?r maletasCogidas ?maleta ?sitiomal))
+)
+
+(defrule descargar_maleta
+  (maquina_transportadora ?sitiomaq true $?x vagones $?z ?vagon true ?sitiovag $?r maletasCogidas $?y ?maleta ?sitiomal $?h)
+  (?maleta ?x ?y ?final)
+  (test (= ?sitiomaq ?final))
+  =>
+  ()
+)
