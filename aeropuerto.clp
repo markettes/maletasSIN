@@ -18,12 +18,13 @@
 )
 
 ;Hechos dinamicos
-(deffacts hechosDinamicos ; maquina localizacion cargada ;maletas maleta localizacion ;vagones vagon cogido posicion maletasCogidas
-  (maquina_transportadora p6 false maletas m1 F m2 F m3 p1 m4 p6 vagones vagont1 true p6 vagont2 false p2 maletasCogidas)
+(deffacts hechosDinamicos ; maquina localizacion cargada enganchada ;maletas maleta localizacion ;vagones vagon cogido posicion maletasCogidas
+  (maquina_transportadora p6 false true maletas m1 F m2 F m3 p1 m4 p6 vagones vagont1 true p6 vagont2 false p2 maletasCogidas)
 )
 
 ;Reglas
 (defrule coger_maleta
+  ;preguntar si el cambio de ?cargada a true es correcto
   (maquina_transportadora ?sitiomaq ?cargada $?x ?maleta ?sitiomal $?y vagones $?z ?vagon true ?sitiovag $?r)
   (test (= sitiomaq sitiomal))
   (?maleta ?peso $?c)
@@ -40,5 +41,23 @@
   (?maleta ?x ?y ?final)
   (test (= ?sitiomaq ?final))
   =>
-  ()
+  ;preguntar duda sobre como hacer para comprobar si es la última maleta
+  (printout t " Maleta ha sido descargada ")
+  (assert (maquina_transportadora ?sitiomaq true $?x vagones $?z ?vagon true ?sitiovag $?r maletasCogidas $?y $?h))
+)
+
+(defrule mover_maquina
+
+)
+
+(defrule enganchar_vagon
+  (maquina_transportadora ?sitiomaq false false maletas $?r vagones $?r1 ?vagon false ?sitiovag $?r2)
+  (test (= ?sitiomaq ?sitiovag))
+  =>
+  (printout t ?vagon" cogido ")
+  (maquina_transportadora ?sitiomaq false true maletas $?r vagones $?r1 ?vagon true ?sitiovag $?r2)
+)
+
+(defrule desenganchar_vagon
+
 )
