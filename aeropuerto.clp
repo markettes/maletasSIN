@@ -26,7 +26,7 @@
 (defrule coger_maleta
   ;preguntar si el cambio de ?cargada a true es correcto
   (maquina_transportadora ?sitiomaq ?cargada $?x ?maleta ?sitiomal $?y vagones $?z ?vagon true ?sitiovag $?r)
-  (test (= sitiomaq sitiomal))
+  (test (= ?sitiomaq ?sitiomal))
   (?maleta ?peso $?c)
   (?vagon ?pesoMin ?pesoMax)
   (test (< ?peso ?pesoMax))
