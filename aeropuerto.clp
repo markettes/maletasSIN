@@ -59,5 +59,9 @@
 )
 
 (defrule desenganchar_vagon
-
+  (maquina_transportadora ?sitiomaq false true maletas $?r vagones $?r1 ?vagon true ?sitiovag $?r2)
+  (test (= ?sitiomaq ?sitiovag))
+  =>
+  (printout t ?vagon" soltado ")
+  (maquina_transportadora ?sitiomaq false false maletas $?r vagones $?r1 ?vagon false ?sitiovag $?r2)
 )
