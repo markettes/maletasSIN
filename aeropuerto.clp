@@ -25,19 +25,20 @@
 ;Reglas
 (defrule coger_maleta
   ;preguntar si el cambio de ?cargada a true es correcto
-  (maquina_transportadora ?sitiomaq ?cargada $?x ?maleta ?sitiomal $?y vagones $?z ?vagon true ?sitiovag $?r)
-  (test (= sitiomaq sitiomal))
+  (maquina_transportadora ?sitiomaq ?cargada true maletas $?x ?maleta ?sitiomal $?y vagones $?z ?vagon true ?sitiovag $?r)
+  (test (= ?sitiomaq ?sitiomal))
   (?maleta ?peso $?c)
   (?vagon ?pesoMin ?pesoMax)
   (test (< ?peso ?pesoMax))
   (test (> ?peso ?pesoMin))
   =>
   (printout t " Maleta ha sido cargada ")
-  (assert (maquina_transportadora ?sitiomaq true $?x $?y vagones $?z ?vagon true ?sitiovag $?r maletasCogidas ?maleta ?sitiomal))
+  (bind ?cargada true)
+  (assert (maquina_transportadora ?sitiomaq ?cargada true maletas $?x $?y vagones $?z ?vagon true ?sitiovag $?r ?maleta ?sitiomal))
 )
 
 (defrule descargar_maleta
-  (maquina_transportadora ?sitiomaq true $?x vagones $?z ?vagon true ?sitiovag $?r maletasCogidas $?y ?maleta ?sitiomal $?h)
+  (maquina_transportadora ?sitiomaq true true $?x vagones $?z ?vagon true ?sitiovag $?r maletasCogidas $?y ?maleta ?sitiomal $?h)
   (?maleta ?x ?y ?final)
   (test (= ?sitiomaq ?final))
   =>
@@ -59,5 +60,15 @@
 )
 
 (defrule desenganchar_vagon
+  (maquina_transportadora ?sitiomaq false true maletas $?r vagones $?r1 ?vagon true ?sitiovag $?r2)
+  (test (= ?sitiomaq ?sitiovag))
+  =>
+  (printout t ?vagon" soltado ")
+  (maquina_transportadora ?sitiomaq false false maletas $?r vagones $?r1 ?vagon false ?sitiovag $?r2)
+)
 
+(defrule objetivo
+  (maquina_transportadora ?sitiomaq false ?noMatters maletas vagones $?r maletasCogidas)
+  =>
+  (printout t "SOLUCION ENCONTRADA")
 )
