@@ -66,7 +66,13 @@
 )
 
 (defrule mover_maquina
-
+  (maquina_transportadora ?sitiomaq $?x vagones $?z ?vagon true ?sitiovag $?r maletasCogidas $?y ?maleta ?sitiomal $?h)
+  (camino ?sitiomaq ?x)
+  =>
+  (bind ?sitiomaq ?x)
+  (bind ?sitiomal ?x)
+  (bind ?sitiovag ?x)
+  (assert (maquina_transportadora ?sitiomaq $?x vagones $?z ?vagon true ?sitiovag $?r maletasCogidas $?y ?maleta ?sitiomal $?h))
 )
 
 (defrule enganchar_vagon
