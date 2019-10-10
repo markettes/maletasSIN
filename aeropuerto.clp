@@ -30,15 +30,15 @@
 )
 
 (deffacts maletas ;peso posicion
-  (maleta m1 12 F p3)
-  (maleta m2 18 F p5)
-  (maleta m3 20 p1 R)
-  (maleta m4 14 p6 R)
+  (maleta m1 12 f p3)
+  (maleta m2 18 f p5)
+  (maleta m3 20 p1 r)
+  (maleta m4 14 p6 r)
 )
 
 ;Hechos dinamicos
-(deffacts hechosDinamicos ; maquina localizacion enganchada ;maletas maleta localizacion ;vagones vagon cogido posicion maletasCogidas
-  (maquina_transportadora p6 true maletas m1 F m2 F m3 p1 m4 p6 vagones vagont1 true p6 vagont2 false p2 maletasCogidas)
+(deffacts hechosDinamicos ; maquina pos posAnterior enganchada ;maletas maleta localizacion ;vagones vagon cogido posicion maletasCogidas
+  (maquina_transportadora p6 p1 true maletas m1 f m2 f m3 p1 m4 p6 vagones vagont1 true p6 vagont2 false p2 maletasCogidas)
 )
 
 ;Reglas
@@ -60,7 +60,7 @@
   (test (eq ?sitiomaq ?final))
   (test (= (length $?h) 0))
   =>
-  (printout t " Maleta ha sido descargada " crlf)
+  (printout t " Maleta " ?maleta " ha sido descargada " crlf)
   (assert (maquina_transportadora ?sitiomaq $?x maletasCogidas $?y $?h))
 )
 
@@ -88,8 +88,7 @@
 )
 
 (defrule objetivo
-  (maquina_transportadora ?sitiomaq ?noMatters maletas vagones $?r maletasCogidas $?x)
-  (test (= (length $?x) 0))
+  (maquina_transportadora ?sitiomaq ?noMatters maletas vagones $?r maletasCogidas)
   =>
   (printout t "SOLUCION ENCONTRADA" crlf)
 )
