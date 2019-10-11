@@ -6,11 +6,22 @@
   (camino p2 f)
   (camino p2 p4)
   (camino p3 p4)
+  (camino p3 p1)
+  (camino p4 p2)
+  (camino p4 p3)
+  (camino p5 p1)
   (camino p5 r)
   (camino p5 p7)
   (camino p6 p8)
   (camino p6 r)
+  (camino p7 p5)
   (camino p7 p8)
+  (camino p8 p6)
+  (camino p8 p7)
+  (camino r p6)
+  (camino r p5)
+  (camino f p1)
+  (camino f p2)
 )
 
 (deffacts vagones ;pesos
@@ -32,52 +43,54 @@
 
 ;Reglas
 (defrule coger_maleta
-  (maquina_transportadora ?sitiomaq true maletas $?x ?maleta ?sitiomal $?y vagones $?z ?vagon true ?sitiovag $?r)
+  (maquina_transportadora ?sitiomaq ?posAnterior true maletas $?x ?maleta ?sitiomal $?y vagones $?z ?vagon true ?sitiovag $?r)
   (maleta ?maleta ?peso $?)
   (vagon ?vagon ?pesoMin ?pesoMax)
   (test (eq ?sitiomaq ?sitiomal))
   (test (<= ?peso ?pesoMax))
   (test (>= ?peso ?pesoMin))
   =>
-  (printout t " Maleta ha sido cargada " crlf)
-  (assert (maquina_transportadora ?sitiomaq true maletas $?x $?y vagones $?z ?vagon true ?sitiovag $?r ?maleta ?sitiomal))
+  (printout t " Maleta " ?maleta " ha sido cargada " crlf)
+  (assert (maquina_transportadora ?sitiomaq ?posAnterior true maletas $?x $?y vagones $?z ?vagon true ?sitiovag $?r ?maleta ?sitiomal))
 )
 
 (defrule descargar_maleta
   (maquina_transportadora ?sitiomaq $?x maletasCogidas $?y ?maleta ?sitiomal $?h)
   (maleta ?maleta $? ?final)
   (test (eq ?sitiomaq ?final))
-  (test (= (length $?h) 0))
   =>
   (printout t " Maleta " ?maleta " ha sido descargada " crlf)
   (assert (maquina_transportadora ?sitiomaq $?x maletasCogidas $?y $?h))
 )
 
 (defrule mover_maquina
-  (maquina_transportadora ?sitiomaq $?g)
+  (maquina_transportadora ?sitiomaq ?posAnterior $?g)
   (camino ?sitiomaq ?x)
+  (test (neq ?posAnterior ?x))
   =>
-  (bind ?sitiomaq ?x)
-  (assert (maquina_transportadora ?sitiomaq $?g))
+  (assert (maquina_transportadora ?x ?sitiomaq $?g))
 )
 
 (defrule enganchar_vagon
-  (maquina_transportadora ?sitiomaq false maletas $?r vagones $?r1 ?vagon false ?sitiovag $?r2)
+  (maquina_transportadora ?sitiomaq ?posAnterior false maletas $?r vagones $?r1 ?vagon false ?sitiovag $?r2)
   (test (eq ?sitiomaq ?sitiovag))
   =>
   (printout t ?vagon" cogido " crlf)
-  (assert (maquina_transportadora ?sitiomaq true maletas $?r vagones $?r1 ?vagon true ?sitiovag $?r2))
+  (assert (maquina_transportadora ?sitiomaq ?posAnterior true maletas $?r vagones $?r1 ?vagon true ?sitiovag $?r2))
 )
 
 (defrule desenganchar_vagon
-  (maquina_transportadora ?sitiomaq true maletas $?r vagones $?r1 ?vagon true ?sitiovag $?r2 maletasCogidas)
+  (maquina_transportadora ?sitiomaq ?posAnterior true maletas $?r vagones $?r1 ?vagon true ?sitiovag $?r2 maletasCogidas)
   =>
   (printout t ?vagon" soltado " crlf)
-  (assert (maquina_transportadora ?sitiomaq false maletas $?r vagones $?r1 ?vagon false ?sitiomaq $?r2 maletasCogidas))
+  (assert (maquina_transportadora ?sitiomaq ?posAnterior false maletas $?r vagones $?r1 ?vagon false ?sitiomaq $?r2 maletasCogidas))
 )
 
 (defrule objetivo
-  (maquina_transportadora ?sitiomaq ?noMatters maletas vagones $?r maletasCogidas)
+  (declare (salience 100))
+  (maquina_transportadora ?sitiomaq ?posAnterior ?noMatters maletas vagones $?r maletasCogidas)
   =>
   (printout t "SOLUCION ENCONTRADA" crlf)
+  (assert(maquina_transportadora))
+  (halt)
 )
