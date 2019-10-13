@@ -101,24 +101,24 @@
 
 (defrule objetivo
   (declare (salience 100))
-  (maquina_transportadora ?nivel ?sitiomaq ?posAnterior ?noMatters maletas vagones $?r maletasCogidas)
+  ?f<-(maquina_transportadora ?nivel ?sitiomaq ?posAnterior ?noMatters maletas vagones $?r maletasCogidas)
   =>
-  (printout t "SOLUCION ENCONTRADA EN EL NIVEL " ?n crlf)
+  (printout t "SOLUCION ENCONTRADA EN EL NIVEL " ?nivel crlf)
   (printout t "NUMERO DE NODOS EXPANDIDOS O REGLAS DISPARADAS " ?*nod-gen* crlf)
-  (assert(maquina_transportadora))
+  (printout t "HECHO OBJETIVO " ?f crlf)
   (halt)
 )
 
 (defrule no_solucion
     (declare (salience -99))
-    (puzzle $? nivel ?n $?)
+    (maquina_transportadora ?nivel $?)
 
 =>
     (printout t "SOLUCION NO ENCONTRADA" crlf)
     (printout t "NUMERO DE NODOS EXPANDIDOS O REGLAS DISPARADAS " ?*nod-gen* crlf)
 
     (halt)
-)		
+)
 
 
 
