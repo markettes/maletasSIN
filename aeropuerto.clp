@@ -1,3 +1,4 @@
+(defglobal ?*nod-gen* = 0)
 ;Hechos estaticos
 (deffacts caminos
   (camino p1 f)
@@ -51,6 +52,7 @@
   (test (>= ?peso ?pesoMin))
   =>
   (printout t " Maleta " ?maleta " ha sido cargada " crlf)
+  (bind ?*nod-gen* (+ ?*nod-gen* 1))
   (assert (maquina_transportadora ?sitiomaq ?posAnterior true maletas $?x $?y vagones $?z ?vagon true ?sitiovag $?r ?maleta ?sitiomal))
 )
 
@@ -60,6 +62,7 @@
   (test (eq ?sitiomaq ?final))
   =>
   (printout t " Maleta " ?maleta " ha sido descargada " crlf)
+  (bind ?*nod-gen* (+ ?*nod-gen* 1))
   (assert (maquina_transportadora ?sitiomaq $?x maletasCogidas $?y $?h))
 )
 
@@ -68,6 +71,7 @@
   (camino ?sitiomaq ?x)
   (test (neq ?posAnterior ?x))
   =>
+  (bind ?*nod-gen* (+ ?*nod-gen* 1))
   (assert (maquina_transportadora ?x ?sitiomaq $?g))
 )
 
@@ -76,6 +80,7 @@
   (test (eq ?sitiomaq ?sitiovag))
   =>
   (printout t ?vagon" cogido " crlf)
+  (bind ?*nod-gen* (+ ?*nod-gen* 1))
   (assert (maquina_transportadora ?sitiomaq ?posAnterior true maletas $?r vagones $?r1 ?vagon true ?sitiovag $?r2))
 )
 
@@ -83,6 +88,7 @@
   (maquina_transportadora ?sitiomaq ?posAnterior true maletas $?r vagones $?r1 ?vagon true ?sitiovag $?r2 maletasCogidas)
   =>
   (printout t ?vagon" soltado " crlf)
+  (bind ?*nod-gen* (+ ?*nod-gen* 1))
   (assert (maquina_transportadora ?sitiomaq ?posAnterior false maletas $?r vagones $?r1 ?vagon false ?sitiomaq $?r2 maletasCogidas))
 )
 
