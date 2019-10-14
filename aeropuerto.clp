@@ -50,7 +50,7 @@
   (test (>= ?peso ?pesoMin))
   (test (< ?nivel ?prof))
   =>
-  (printout t " Maleta " ?maleta " ha sido cargada " crlf)
+  ;(printout t " Maleta " ?maleta " ha sido cargada " crlf)
   (bind ?*nod-gen* (+ ?*nod-gen* 1))
   (assert (maquina_transportadora (+ ?nivel 1) ?sitiomaq ?posAnterior true maletas $?x $?y vagones $?z ?vagon true ?sitiovag $?r ?maleta ?sitiomal))
 )
@@ -62,7 +62,7 @@
   (profundidad-maxima ?prof)
   (test (< ?nivel ?prof))
   =>
-  (printout t " Maleta " ?maleta " ha sido descargada " crlf)
+  ;(printout t " Maleta " ?maleta " ha sido descargada " crlf)
   (bind ?*nod-gen* (+ ?*nod-gen* 1))
   (assert (maquina_transportadora (+ ?nivel 1) ?sitiomaq $?x maletasCogidas $?y $?h))
 )
@@ -84,7 +84,7 @@
   (test (eq ?sitiomaq ?sitiovag))
   (test (< ?nivel ?prof))
   =>
-  (printout t ?vagon" cogido " crlf)
+  ;(printout t ?vagon" cogido " crlf)
   (bind ?*nod-gen* (+ ?*nod-gen* 1))
   (assert (maquina_transportadora (+ ?nivel 1) ?sitiomaq ?posAnterior true maletas $?r vagones $?r1 ?vagon true ?sitiovag $?r2))
 )
@@ -94,7 +94,7 @@
   (profundidad-maxima ?prof)
   (test (< ?nivel ?prof))
   =>
-  (printout t ?vagon" soltado " crlf)
+  ;(printout t ?vagon" soltado " crlf)
   (bind ?*nod-gen* (+ ?*nod-gen* 1))
   (assert (maquina_transportadora (+ ?nivel 1) ?sitiomaq ?posAnterior false maletas $?r vagones $?r1 ?vagon false ?sitiomaq $?r2 maletasCogidas))
 )
